@@ -1,0 +1,27 @@
+package com.narxoz.rpg.floor;
+
+import com.narxoz.rpg.combatant.*;
+import com.narxoz.rpg.state.PoisonState;
+import java.util.List;
+
+public class TrapFloor extends TowerFloor {
+
+    protected void setup(List<Hero> party) {
+        System.out.println("Poison trap");
+    }
+
+    protected FloorResult resolveChallenge(List<Hero> party) {
+        for (Hero h : party) {
+            h.setState(new PoisonState());
+        }
+        return new FloorResult(true, 10, "Trap triggered");
+    }
+
+    protected void awardLoot(List<Hero> party, FloorResult r) {
+        System.out.println("Survived trap");
+    }
+
+    protected String getFloorName() {
+        return "Trap Floor";
+    }
+}
