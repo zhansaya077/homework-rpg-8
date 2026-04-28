@@ -1,11 +1,8 @@
 package com.narxoz.rpg.combatant;
 
-/**
- * Represents a player-controlled hero participating in the tower climb.
- *
- * Students: you may extend this class as needed for your implementation.
- * You will need to add a HeroState field and related methods.
- */
+import com.narxoz.rpg.state.HeroState;
+import com.narxoz.rpg.state.NormalState;
+
 public class Hero {
 
     private final String name;
@@ -14,12 +11,15 @@ public class Hero {
     private final int attackPower;
     private final int defense;
 
+    private HeroState state;
+
     public Hero(String name, int hp, int attackPower, int defense) {
         this.name = name;
         this.hp = hp;
         this.maxHp = hp;
         this.attackPower = attackPower;
         this.defense = defense;
+        this.state = new NormalState();
     }
 
     public String getName()        { return name; }
@@ -29,21 +29,43 @@ public class Hero {
     public int getDefense()        { return defense; }
     public boolean isAlive()       { return hp > 0; }
 
-    /**
-     * Reduces this hero's HP by the given amount, clamped to zero.
-     *
-     * @param amount the damage to apply; must be non-negative
-     */
-    public void takeDamage(int amount) {
-        hp = Math.max(0, hp - amount);
+    public HeroState getState() {
+        return state;
     }
 
-    /**
-     * Restores this hero's HP by the given amount, clamped to maxHp.
-     *
-     * @param amount the HP to restore; must be non-negative
-     */
+    public void setState(HeroState state) {
+        System.out.println(name + " state -> " + state.getName());
+        this.state = state;
+    }
+
+    public void takeTurn(Monster monster) {
+        state.onTurnStart(this);
+
+        if (!isAlive()) return;
+
+        if (!state.canAct()) {
+            System.out.println(name + " cannot act (" + state.getName() + ")");
+            state.onTurnEnd(this);
+            return;
+        }
+
+        int damage = state.modifyOutgoingDamage(attackPower);
+
+        System.out.println(name + " attacks for " + damage);
+        monster.takeDamage(damage);
+
+        state.onTurnEnd(this);
+    }
+
+    public void takeDamage(int amount) {
+        int modified = state.modifyIncomingDamage(amount);
+        hp = Math.max(0, hp - modified);
+
+        System.out.println(name + " takes " + modified + " damage (HP: " + hp + ")");
+    }
+
     public void heal(int amount) {
         hp = Math.min(maxHp, hp + amount);
+        System.out.println(name + " heals " + amount + " (HP: " + hp + ")");
     }
 }
