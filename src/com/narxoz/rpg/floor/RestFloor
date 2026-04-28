@@ -1,0 +1,28 @@
+package com.narxoz.rpg.floor;
+
+import com.narxoz.rpg.combatant.*;
+import java.util.List;
+
+public class RestFloor extends TowerFloor {
+
+    protected void setup(List<Hero> party) {
+        System.out.println("Rest time");
+    }
+
+    protected FloorResult resolveChallenge(List<Hero> party) {
+        for (Hero h : party) {
+            h.heal(20);
+        }
+        return new FloorResult(true, 0, "Rested");
+    }
+
+    protected void awardLoot(List<Hero> party, FloorResult r) {}
+
+    protected boolean shouldAwardLoot(FloorResult r) {
+        return false;
+    }
+
+    protected String getFloorName() {
+        return "Rest Floor";
+    }
+}
