@@ -1,5 +1,9 @@
 package com.narxoz.rpg.combatant;
 
+/**
+ * A simple monster encountered in a tower floor.
+ * Used by floors that have combat challenges.
+ */
 public class Monster {
 
     private final String name;
@@ -17,14 +21,22 @@ public class Monster {
     public int getAttackPower()   { return attackPower; }
     public boolean isAlive()      { return hp > 0; }
 
+    /**
+     * Reduces this monster's HP by the given amount, clamped to zero.
+     *
+     * @param amount the damage to apply
+     */
     public void takeDamage(int amount) {
         hp = Math.max(0, hp - amount);
-        System.out.println(name + " takes " + amount + " damage (HP: " + hp + ")");
     }
 
+    /**
+     * This monster attacks a hero, dealing damage.
+     *
+     * @param hero the target hero
+     */
     public void attack(Hero hero) {
-        int damage = Math.max(1, this.attackPower - hero.getDefense());
-        System.out.println(name + " attacks " + hero.getName() + " for " + damage);
+        int damage = Math.max(1, this.attackPower - 2); // simple formula: attack power minus small defense value
         hero.takeDamage(damage);
     }
 }
