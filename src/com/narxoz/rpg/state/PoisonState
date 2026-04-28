@@ -1,0 +1,30 @@
+package com.narxoz.rpg.state;
+
+import com.narxoz.rpg.combatant.Hero;
+
+public class PoisonState implements HeroState {
+
+    private int turns = 3;
+
+    public String getName() { return "Poison"; }
+
+    public int modifyOutgoingDamage(int basePower) {
+        return (int)(basePower * 0.8);
+    }
+
+    public int modifyIncomingDamage(int rawDamage) {
+        return rawDamage;
+    }
+
+    public void onTurnStart(Hero hero) {
+        hero.takeDamage(5);
+        turns--;
+        if (turns <= 0) {
+            hero.setState(new NormalState());
+        }
+    }
+
+    public void onTurnEnd(Hero hero) {}
+
+    public boolean canAct() { return true; }
+}
