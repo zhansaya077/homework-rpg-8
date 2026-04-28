@@ -1,0 +1,39 @@
+package com.narxoz.rpg.floor;
+
+import com.narxoz.rpg.combatant.*;
+import java.util.List;
+
+public class BattleFloor extends TowerFloor {
+
+    protected void setup(List<Hero> party) {
+        System.out.println("Enemies appear");
+    }
+
+    protected FloorResult resolveChallenge(List<Hero> party) {
+        Monster m = new Monster("Goblin", 50, 10);
+
+        while (m.isAlive() && party.stream().anyMatch(Hero::isAlive)) {
+            for (Hero h : party) {
+                if (h.isAlive()) {
+                    h.takeTurn(m);
+                }
+            }
+            for (Hero h : party) {
+                if (h.isAlive()) {
+                    m.attack(h);
+                }
+            }
+        }
+
+        boolean cleared = !m.isAlive();
+        return new FloorResult(cleared, 0, "Battle done");
+    }
+
+    protected void awardLoot(List<Hero> party, FloorResult r) {
+        System.out.println("Loot gained");
+    }
+
+    protected String getFloorName() {
+        return "Battle Floor";
+    }
+}
