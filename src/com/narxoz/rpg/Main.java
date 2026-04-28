@@ -28,6 +28,15 @@ public class Main {
             f.explore(party);
         }
 
-        System.out.println("Tower finished");
+        System.out.println("\n=== FINAL STATUS ===");
+        for (Hero h : party) {
+            System.out.println(
+                    h.getName()
+                    + " | HP: " + h.getHp()
+                    + " | State: " + h.getState().getName()
+            );
+        }
+
+        System.out.println("\nTower finished");
     }
 }
